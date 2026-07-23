@@ -22,19 +22,3 @@ class PredictionResponse(BaseModel):
     PredictionResponse
     """
     number_case_malaria:Optional[float] = Field(description="Number of case of malaria per One thousand case at risk", default=250)
-
-prediction = PredictionRequest(
-    health_expenditure_per_capita_usd=250,
-    rural_population_pct=50,
-    gdp_per_capita_usd=1200,
-    population_density=80,
-    forest_area_pct=30,
-    under5_mortality_per_1000=52,
-    life_expectancy_years=62,
-    basic_water_access_pct=60,
-    govt_health_exp_pct_gdp=2.5,
-    primary_completion_rate_pct=70,
-    fertility_rate_births_per_woman=5.2
-    )
-
-print(prediction.model_dump(mode="json"))

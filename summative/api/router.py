@@ -2,6 +2,7 @@
 
 from fastapi.routing import APIRouter
 from .schemas import PredictionRequest, PredictionResponse
+from .prediction import Prediction
 
 router = APIRouter(
     prefix="/predictions",
@@ -19,7 +20,5 @@ async def predict_cases(predict_cases:PredictionRequest):
     """
     This is the prediction router
     """
-    return {
-        "status":True,
-        "data":PredictionResponse()
-    }
+    prediction = Prediction()
+    return await prediction.predict_malaria_incidence(user_prediction=predict_cases)
