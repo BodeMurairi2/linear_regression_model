@@ -1,1 +1,1 @@
-https://malaria-prevalence.onrender.com/
+https://malaria-prevalence.onrender.com/docs
