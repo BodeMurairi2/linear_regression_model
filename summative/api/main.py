@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
-from .router import router as prediction_router
+from api.routers.router import routing
+from api.middlewares.cors_middleware import cors_middleware
 
 app = FastAPI(
     description="Predicting Malaria Prevalance in 1000 cases at risk",
@@ -8,7 +9,8 @@ app = FastAPI(
     openapi_url="/swagger"
 )
 
-app.include_router(prediction_router)
+routing(app=app)
+cors_middleware(app=app)
 
 @app.get("/")
 async def welcome():

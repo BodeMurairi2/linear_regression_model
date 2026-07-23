@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from fastapi.routing import APIRouter
-from .schemas import PredictionRequest, PredictionResponse
-from .prediction import Prediction
+from api.schemas.prediction_schemas import PredictionRequest, PredictionResponse
+from api.services.prediction import Prediction
 
 router = APIRouter(
     prefix="/predictions",

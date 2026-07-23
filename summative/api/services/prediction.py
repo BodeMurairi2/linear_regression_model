@@ -4,7 +4,7 @@ import joblib
 import pandas as pd
 from pathlib import Path
 
-from .schemas import PredictionRequest, PredictionResponse
+from api.schemas.prediction_schemas import PredictionRequest, PredictionResponse
 
 class Prediction:
     def __init__(self):
