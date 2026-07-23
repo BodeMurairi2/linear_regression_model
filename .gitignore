@@ -2,3 +2,14 @@ tests/
 .venv/
 *.env
 datasets_usecases.pdf
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS junk
+.DS_Store
+Thumbs.db
