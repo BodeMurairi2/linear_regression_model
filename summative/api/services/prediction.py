@@ -7,12 +7,9 @@ from pathlib import Path
 from api.schemas.prediction_schemas import PredictionRequest, PredictionResponse
 
 class Prediction:
-    def __init__(self):
-        self.MODEL_PATH = Path(__file__).parent.parent / "linear_regression" / "model.pkl"
-        self.SCALER_PATH = Path(__file__).parent.parent / "linear_regression" / "scaler.pkl"
-
-        self.__model = joblib.load(filename=self.MODEL_PATH)
-        self.__scaler = joblib.load(filename=self.SCALER_PATH)
+    def __init__(self, model:joblib, scaler:joblib):
+        self.__model = model
+        self.__scaler = scaler
 
         self.FEATURES_COLUMNS = [
             "health_expenditure_per_capita_usd",
