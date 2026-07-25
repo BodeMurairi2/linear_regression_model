@@ -1,0 +1,323 @@
+<title>Malaria Prevalence Estimater — UI Concept</title>
+<style>
+  :root{
+    --bg:#ffffff;
+    --surface:#f6f1ec;
+    --surface-2:#efe8e0;
+    --ink:#1b1b1b;
+    --muted:#6b625a;
+    --line:rgba(27,27,27,0.12);
+    --teal:#2e7d6b;
+    --teal-soft:#dfeee9;
+    --teal-contrast:#ffffff;
+    --accent:#e14f3c;
+    --accent-soft:#fbe4e0;
+    --card-shadow:0 1px 2px rgba(27,27,27,0.06), 0 8px 24px -12px rgba(27,27,27,0.18);
+    --phone-shadow:0 30px 60px -25px rgba(27,27,27,0.35), 0 2px 8px rgba(27,27,27,0.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#15120f;
+      --surface:#201a16;
+      --surface-2:#2a221c;
+      --ink:#f3ede6;
+      --muted:#a89c8f;
+      --line:rgba(243,237,230,0.14);
+      --teal:#4fbfa8;
+      --teal-soft:#183530;
+      --teal-contrast:#0d1f1b;
+      --accent:#ff7a62;
+      --accent-soft:#3a2019;
+      --card-shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+      --phone-shadow:0 30px 60px -25px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15120f; --surface:#201a16; --surface-2:#2a221c; --ink:#f3ede6; --muted:#a89c8f;
+    --line:rgba(243,237,230,0.14); --teal:#4fbfa8; --teal-soft:#183530; --teal-contrast:#0d1f1b;
+    --accent:#ff7a62; --accent-soft:#3a2019;
+    --card-shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --phone-shadow:0 30px 60px -25px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.3);
+  }
+  :root[data-theme="light"]{
+    --bg:#ffffff; --surface:#f6f1ec; --surface-2:#efe8e0; --ink:#1b1b1b; --muted:#6b625a;
+    --line:rgba(27,27,27,0.12); --teal:#2e7d6b; --teal-soft:#dfeee9; --teal-contrast:#ffffff;
+    --accent:#e14f3c; --accent-soft:#fbe4e0;
+    --card-shadow:0 1px 2px rgba(27,27,27,0.06), 0 8px 24px -12px rgba(27,27,27,0.18);
+    --phone-shadow:0 30px 60px -25px rgba(27,27,27,0.35), 0 2px 8px rgba(27,27,27,0.10);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:2.25rem;padding:3.5rem 1.25rem 4rem;}
+
+  .page-head{max-width:34rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.75rem;}
+  .chip{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.7rem;border-radius:999px;background:var(--teal-soft);color:var(--teal);font-size:0.72rem;font-weight:700;letter-spacing:0.02em;}
+  .page-head h1{margin:0;font-size:clamp(1.5rem,1.1rem + 1.6vw,2.1rem);font-weight:700;letter-spacing:-0.01em;text-wrap:balance;}
+  .dek{margin:0;color:var(--muted);font-size:0.95rem;line-height:1.5;text-wrap:balance;}
+
+  .phone{position:relative;width:min(390px, 100%);background:var(--bg);border:1px solid var(--line);border-radius:28px;box-shadow:var(--phone-shadow);overflow:hidden;}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 1.2rem 0.4rem;font-size:0.7rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);}
+  .statusbar .glyphs{display:flex;gap:0.3rem;color:var(--muted);font-size:0.68rem;}
+
+  .appbar{display:flex;align-items:center;gap:0.65rem;padding:0.5rem 1.2rem 1rem;}
+  .app-icon{display:flex;align-items:center;justify-content:center;width:2.1rem;height:2.1rem;border-radius:999px;background:var(--teal);color:var(--teal-contrast);font-size:1rem;flex:none;}
+  .app-title{margin:0;font-size:1.08rem;font-weight:700;letter-spacing:-0.005em;}
+
+  .screen-body{display:flex;flex-direction:column;gap:1.5rem;padding:0 1.2rem 1.4rem;}
+
+  .section{display:flex;flex-direction:column;gap:0.8rem;}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:0.5rem;border-bottom:1.5px solid var(--line);}
+  .section-head h2{margin:0;font-size:0.92rem;font-weight:700;}
+  .section-head span{font-size:0.68rem;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+  .field{display:flex;flex-direction:column;gap:0.3rem;}
+  .field-label{font-size:0.78rem;font-weight:600;color:var(--muted);}
+  .field-box{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:0.7rem 0.85rem;}
+  .field-box.focused{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft);}
+  .field-value{font-family:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace;font-size:0.95rem;font-variant-numeric:tabular-nums;}
+  .field-unit{font-size:0.72rem;color:var(--muted);white-space:nowrap;}
+  .field-helper{font-size:0.68rem;color:var(--muted);}
+
+  .predict-btn{
+    appearance:none;border:none;display:flex;align-items:center;justify-content:center;gap:0.5rem;
+    width:100%;padding:0.95rem 1rem;border-radius:999px;
+    background:var(--teal);color:var(--teal-contrast);
+    font-size:0.95rem;font-weight:700;letter-spacing:0.02em;cursor:pointer;
+    box-shadow:0 10px 24px -10px color-mix(in srgb, var(--teal) 60%, transparent);
+    transition:filter 0.15s ease;
+  }
+  .predict-btn:hover{filter:brightness(1.05);}
+  .predict-btn:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){.predict-btn{transition:none;}}
+
+  .card{background:var(--surface);border-radius:20px;padding:1.1rem 1.15rem 1.2rem;box-shadow:var(--card-shadow);}
+  .card-head{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;}
+  .dot{width:0.5rem;height:0.5rem;border-radius:999px;background:var(--teal);flex:none;}
+  .card-head p{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
+
+  .result-value{margin:0.15rem 0 0;display:flex;align-items:baseline;gap:0.55rem;font-family:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace;font-size:clamp(2.1rem,1.7rem + 1.5vw,2.6rem);font-weight:700;font-variant-numeric:tabular-nums;}
+  .result-unit{font-size:0.72rem;font-weight:600;color:var(--muted);font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:0.05em;}
+  .result-note{margin:0.8rem 0 0;font-size:0.74rem;line-height:1.5;color:var(--muted);border-top:1px dashed var(--line);padding-top:0.65rem;}
+
+  .table-caption{margin:0 0 0.7rem;font-size:0.72rem;color:var(--muted);font-style:italic;}
+  .legend{display:flex;gap:1rem;font-size:0.7rem;color:var(--muted);margin-bottom:0.2rem;}
+  .legend .label{display:inline-flex;align-items:center;gap:0.35rem;}
+  .swatch{width:0.6rem;height:0.6rem;border-radius:2px;display:inline-block;}
+  .swatch.down{background:var(--teal);}
+  .swatch.up{background:var(--accent);}
+
+  .driver-table{display:flex;flex-direction:column;}
+  .driver-head{display:flex;justify-content:space-between;align-items:baseline;padding:0.6rem 0 0.5rem;border-bottom:1.5px solid var(--line);font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+  .driver-row{display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--line);}
+  .driver-row:last-child{border-bottom:none;padding-bottom:0.1rem;}
+  .driver-main{display:flex;flex-direction:column;gap:0.22rem;}
+  .driver-feature{font-size:0.84rem;font-weight:700;}
+  .driver-desc{font-size:0.74rem;color:var(--muted);line-height:1.42;max-width:15.5rem;}
+  .driver-pill{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:2.7rem;height:1.55rem;padding:0 0.5rem;border-radius:999px;font-family:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace;font-size:0.78rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:0.05rem;}
+  .driver-pill.pos{background:var(--accent-soft);color:var(--accent);}
+  .driver-pill.neg{background:var(--teal-soft);color:var(--teal);}
+
+  .footnote{max-width:26rem;text-align:center;font-size:0.76rem;line-height:1.5;color:var(--muted);}
+
+  @media (max-width:420px){.page{padding:2.5rem 0.9rem 3rem;}}
+</style>
+
+<div class="page">
+  <header class="page-head">
+    <h1>Malaria Prevalence Estimater per 1000 cases at risk</h1>
+  </header>
+
+  <div class="phone" role="img" aria-label="Mockup of the malaria prediction mobile app with a teal Predict button and a table of feature contributions with explanations">
+    <div class="statusbar"><span>9:41</span><span class="glyphs">●●●●</span></div>
+    <div class="appbar"><span class="app-icon">🦟</span><p class="app-title">Malaria Prevalence Estimater per 1000 cases at risk</p></div>
+
+    <div class="screen-body">
+
+      <div class="section">
+        <div class="section-head"><h2>Health system &amp; outcomes</h2><span>5 fields</span></div>
+        <div class="field">
+          <span class="field-label">Health expenditure per capita</span>
+          <div class="field-box"><span class="field-value">45</span><span class="field-unit">USD</span></div>
+          <span class="field-helper">0&ndash;1,000</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Government health spending</span>
+          <div class="field-box focused"><span class="field-value">4.2</span><span class="field-unit">% of GDP</span></div>
+          <span class="field-helper">0&ndash;10</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Under-5 mortality</span>
+          <div class="field-box"><span class="field-value">95</span><span class="field-unit">per 1,000</span></div>
+          <span class="field-helper">0&ndash;600</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Life expectancy</span>
+          <div class="field-box"><span class="field-value">58</span><span class="field-unit">years</span></div>
+          <span class="field-helper">0&ndash;100</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Basic water access</span>
+          <div class="field-box"><span class="field-value">52</span><span class="field-unit">% of pop.</span></div>
+          <span class="field-helper">0&ndash;100</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>Economy &amp; demographics</h2><span>4 fields</span></div>
+        <div class="field">
+          <span class="field-label">GDP per capita</span>
+          <div class="field-box"><span class="field-value">2,100</span><span class="field-unit">USD</span></div>
+          <span class="field-helper">0&ndash;25,000</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Population density</span>
+          <div class="field-box"><span class="field-value">220</span><span class="field-unit">/ km&sup2;</span></div>
+          <span class="field-helper">0&ndash;800</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Rural population</span>
+          <div class="field-box"><span class="field-value">62</span><span class="field-unit">%</span></div>
+          <span class="field-helper">0&ndash;100</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Fertility rate</span>
+          <div class="field-box"><span class="field-value">5.1</span><span class="field-unit">births/woman</span></div>
+          <span class="field-helper">1&ndash;9.9</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>Environment &amp; education</h2><span>2 fields</span></div>
+        <div class="field">
+          <span class="field-label">Forest area</span>
+          <div class="field-box"><span class="field-value">18</span><span class="field-unit">%</span></div>
+          <span class="field-helper">0&ndash;100</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Primary completion rate</span>
+          <div class="field-box"><span class="field-value">68</span><span class="field-unit">%</span></div>
+          <span class="field-helper">0&ndash;170</span>
+        </div>
+      </div>
+
+      <button class="predict-btn" type="button">Predict &rarr;</button>
+
+      <div class="card">
+        <div class="card-head"><span class="dot"></span><p>Estimated malaria incidence</p></div>
+        <p class="result-value">187<span class="result-unit">per 1,000 at risk</span></p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="dot"></span><p>What's driving this estimate</p></div>
+        <p class="table-caption">Illustrative example &mdash; not part of the graded requirements.</p>
+        <div class="legend">
+          <span class="label"><span class="swatch down"></span>Lowers estimate</span>
+          <span class="label"><span class="swatch up"></span>Raises estimate</span>
+        </div>
+
+        <div class="driver-table">
+          <div class="driver-head"><span>Feature</span><span>Contribution</span></div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Under-5 mortality</span>
+              <span class="driver-desc">Child deaths before age 5 per 1,000 live births &mdash; a proxy for how strained the health system is.</span>
+            </div>
+            <span class="driver-pill pos">+42</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Basic water access</span>
+              <span class="driver-desc">Share of the population with access to a basic drinking water source.</span>
+            </div>
+            <span class="driver-pill neg">&minus;18</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Government health spending</span>
+              <span class="driver-desc">Government health expenditure as a share of GDP.</span>
+            </div>
+            <span class="driver-pill neg">&minus;12</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">GDP per capita</span>
+              <span class="driver-desc">Average economic output per person, in current USD.</span>
+            </div>
+            <span class="driver-pill neg">&minus;9</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Fertility rate</span>
+              <span class="driver-desc">Average number of births per woman.</span>
+            </div>
+            <span class="driver-pill pos">+8</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Rural population</span>
+              <span class="driver-desc">Share of the population living in rural areas.</span>
+            </div>
+            <span class="driver-pill pos">+7</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Life expectancy</span>
+              <span class="driver-desc">Average number of years a newborn is expected to live.</span>
+            </div>
+            <span class="driver-pill neg">&minus;6</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Forest area</span>
+              <span class="driver-desc">Share of land covered by forest &mdash; more habitat for mosquito breeding.</span>
+            </div>
+            <span class="driver-pill pos">+5</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Primary completion rate</span>
+              <span class="driver-desc">Share of children completing primary school (can exceed 100% due to over-age enrollment).</span>
+            </div>
+            <span class="driver-pill neg">&minus;4</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Population density</span>
+              <span class="driver-desc">People per square kilometer of land area.</span>
+            </div>
+            <span class="driver-pill pos">+3</span>
+          </div>
+
+          <div class="driver-row">
+            <div class="driver-main">
+              <span class="driver-feature">Health expenditure per capita</span>
+              <span class="driver-desc">Average amount spent on health per person, in USD.</span>
+            </div>
+            <span class="driver-pill neg">&minus;2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="footnote">Concept preview for review, not the live app. Field ranges match the API's validated bounds exactly; the contribution table uses illustrative numbers, not a real SHAP computation.</p>
+</div>

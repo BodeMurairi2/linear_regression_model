@@ -13,8 +13,8 @@ class PredictionRequest(BaseModel):
     under5_mortality_per_1000:float = Field(description="Ratio per 1000 of children under 5 mortality", ge=0, le=600)
     life_expectancy_years:float = Field(description="Population life expectancy in years", ge=0, le=100)
     basic_water_access_pct:float = Field(description="Percentage of population with access to basic drinking water", ge=0, le=100)
-    govt_health_exp_pct_gdp:float = Field(description="Percentage of GDP allocated to health by government", ge=0, le=20)
-    primary_completion_rate_pct:float = Field(description="Percentage of population who has completed primary school (can exceed 100 due to over-age enrollment)", ge=0, le=120)
+    govt_health_exp_pct_gdp:float = Field(description="Percentage of GDP allocated to health by government", ge=0, le=10)
+    primary_completion_rate_pct:float = Field(description="Percentage of population who has completed primary school (can exceed 100 due to over-age enrollment)", ge=0, le=170)
     fertility_rate_births_per_woman:float = Field(description="Average number of births per woman", ge=1, lt=10)
 
 class PredictionResponse(BaseModel):
