@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
 
+import time
+import logging
 import requests
 import pandas as pd
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+session = requests.Session()
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
 
 AFRICA_ISO3 = [
         "DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CPV", "CMR", "CAF", "TCD", "COM", "COD", "COG",
@@ -25,10 +37,12 @@ def download_malaria_prevalence():
         "$filter":f"SpatialDimType eq 'COUNTRY' and SpatialDim in ({country_filter})"
     }
 
-    response = requests.get(url_endpoint, params=params)
+    logger.info("Fetching WHO malaria incidence data...")
+    response = session.get(url_endpoint, params=params, timeout=30)
 
     response.raise_for_status()
 
+    logger.info("WHO malaria incidence data fetched successfully.")
     return response.json()
 
 def download_wb_african_indicators():
@@ -45,18 +59,38 @@ def download_wb_african_indicators():
 
     country_codes = ";".join(AFRICA_ISO3)
 
-    worldbank_data = {}
-
-    for code in world_bank_indicators:
+    def fetch_indicator(code, retries=4):
         endpoint_url = f"https://api.worldbank.org/v2/country/{country_codes}/indicator/{code}"
         params = {
             "date":DATE_RANGE,
             "format":"json",
             "per_page":20000
         }
-        response = requests.get(endpoint_url, params=params)
-        response.raise_for_status()
-        worldbank_data[code] = response.json()
+        last_error = None
+        for attempt in range(retries):
+            try:
+                response = session.get(endpoint_url, params=params, timeout=30)
+                response.raise_for_status()
+                return code, response.json()
+            except requests.exceptions.RequestException as error:
+                last_error = error
+                time.sleep(2 + attempt * 2)
+        raise last_error
+
+    total = len(world_bank_indicators)
+    logger.info(f"Fetching {total} World Bank indicators (5 at a time)...")
+
+    worldbank_data = {}
+    completed = 0
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {executor.submit(fetch_indicator, code): code for code in world_bank_indicators}
+        for future in as_completed(futures):
+            code, data = future.result()
+            worldbank_data[code] = data
+            completed += 1
+            logger.info(f"  [{completed}/{total}] fetched {code}")
+
+    logger.info("All World Bank indicators fetched successfully.")
     return worldbank_data
 
 def extract_malaria_data_raw_json(raw_data):
@@ -123,3 +157,5 @@ if __name__ == "__main__":
 
     malaria_dataframe.to_csv(f"{save_path}/who_malaria_incidence_raw.csv", index=False)
     worldbank_dataframe.to_csv(f"{save_path}/worldbank_indicators_raw.csv", index=False)
+    logger.info(f"Saved who_malaria_incidence_raw.csv ({malaria_dataframe.shape[0]} rows)")
+    logger.info(f"Saved worldbank_indicators_raw.csv ({worldbank_dataframe.shape[0]} rows)")
