@@ -6,7 +6,7 @@ import '../models/prediction_outcome.dart';
 import '../models/prediction_request.dart';
 
 class PredictionService {
-  static const String baseUrl = 'https://malaria-prevalence.onrender.com';
+  static const String baseUrl = 'http://malaria-prevalence.onrender.com';
   static const String predictPath = '/predictions/';
 
   Future<PredictionOutcome> predict(PredictionRequest request) async {
@@ -26,7 +26,17 @@ class PredictionService {
         final prediction = body['Prediction'] as Map<String, dynamic>?;
         final value = prediction?['number_case_malaria'];
         if (value is num) {
-          return PredictionSuccess(value.toDouble());
+          final rawContributions = prediction?['feature_contributions'];
+          final contributions = rawContributions is List
+              ? rawContributions
+                    .whereType<Map<String, dynamic>>()
+                    .map(FeatureContribution.fromJson)
+                    .toList()
+              : const <FeatureContribution>[];
+          return PredictionSuccess(
+            value.toDouble(),
+            contributions: contributions,
+          );
         }
         return const PredictionFailure(
           'The server response was missing a prediction value.',

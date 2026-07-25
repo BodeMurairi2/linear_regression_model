@@ -5,6 +5,7 @@ import '../models/prediction_outcome.dart';
 import '../models/prediction_request.dart';
 import '../services/prediction_service.dart';
 import '../theme/app_colors.dart';
+import '../widgets/driver_table.dart';
 import '../widgets/predict_button.dart';
 import '../widgets/result_card.dart';
 import '../widgets/section_card.dart';
@@ -116,6 +117,11 @@ class _PredictionScreenState extends State<PredictionScreen> {
               PredictButton(isLoading: _isLoading, onPressed: _handlePredict),
               const SizedBox(height: 16),
               ResultCard(outcome: _outcome),
+              if (_outcome case PredictionSuccess(:final contributions))
+                if (contributions.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  DriverTable(contributions: contributions),
+                ],
             ],
           ),
         ),

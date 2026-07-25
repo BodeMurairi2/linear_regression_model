@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import joblib
+import shap
 from pathlib import Path
 
 from contextlib import asynccontextmanager
@@ -15,9 +16,11 @@ def init_model():
 
         model = joblib.load(filename=MODEL_PATH)
         scaler = joblib.load(filename=SCALER_PATH)
+        explainer = shap.TreeExplainer(model)
         return {
                 "model":model,
                 "scaler":scaler,
+                "explainer":explainer,
                 "retrain":RetrainModel(model=model, scaler=scaler)
                 }
 

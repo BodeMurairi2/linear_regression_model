@@ -16,4 +16,5 @@ dependencies = [
     "fastapi",
     "uvicorn",
     "requests>=2.34.2",
+    "shap>=0.52.0",
 ]
