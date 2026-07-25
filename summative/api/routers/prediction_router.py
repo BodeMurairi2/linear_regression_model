@@ -25,5 +25,9 @@ async def predict_cases(
     This is the prediction router
     """
     ressources = request.app.state.ressources
-    prediction = Prediction(model=ressources["model"], scaler=ressources["scaler"])
+    prediction = Prediction(
+        model=ressources["model"],
+        scaler=ressources["scaler"],
+        explainer=ressources.get("explainer"),
+    )
     return await prediction.predict_malaria_incidence(user_prediction=predict_cases)
