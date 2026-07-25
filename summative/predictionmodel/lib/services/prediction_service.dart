@@ -6,7 +6,7 @@ import '../models/prediction_outcome.dart';
 import '../models/prediction_request.dart';
 
 class PredictionService {
-  static const String baseUrl = 'http://malaria-prevalence.onrender.com';
+  static const String baseUrl = 'https://malaria-prevalence.onrender.com';
   static const String predictPath = '/predictions/';
 
   Future<PredictionOutcome> predict(PredictionRequest request) async {
