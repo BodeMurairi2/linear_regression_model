@@ -210,9 +210,7 @@ The API base URL is already hardcoded to the live Render deployment — no confi
 ---
 
 ## Video Demo
-
-[Video link placeholder — to be added]
-
+https://youtu.be/rpgsq1ZJQqE
 ---
 
 ## Sources
@@ -245,4 +243,4 @@ The API base URL is already hardcoded to the live Render deployment — no confi
 ## Links
 
 - **Backend API:** https://malaria-prevalence.onrender.com
-- **Video demo:** [placeholder — to be added]
+- **Video demo:** https://youtu.be/rpgsq1ZJQqE
