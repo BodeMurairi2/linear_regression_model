@@ -7,6 +7,7 @@ from pathlib import Path
 from fastapi import HTTPException, status
 
 import joblib
+import shap
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
@@ -15,8 +16,9 @@ from api.schemas.retrain_model_schemas import RetrainRequest
 from api.services.prediction import Prediction
 
 class RetrainModel(Prediction):
-    def __init__(self, model, scaler):
+    def __init__(self, model, scaler, ressources):
         super().__init__(model=model, scaler=scaler)
+        self.__ressources = ressources
         self.__lock = threading.Lock()
         self.__is_training = False
         self.TARGET_COLUMN = "malaria_incidence_per_1000_at_risk"
@@ -38,6 +40,9 @@ class RetrainModel(Prediction):
         with self.__lock:
             self.__model = new_model
             self.__scaler = new_scaler
+            self.__ressources["model"] = new_model
+            self.__ressources["scaler"] = new_scaler
+            self.__ressources["explainer"] = shap.TreeExplainer(new_model)
 
     async def launch_retraining(self, data:List[RetrainRequest]):
         """

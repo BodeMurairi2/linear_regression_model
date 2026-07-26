@@ -10,12 +10,6 @@ router = APIRouter(
     tags=["Predicts Malaria cases"]
 )
 
-@router.get("/")
-async def get_all_predictions():
-    return {
-        "message":"Predictions running"
-    }
-
 @router.post("/")
 async def predict_cases(
     predict_cases:PredictionRequest,
@@ -23,6 +17,9 @@ async def predict_cases(
     ):
     """
     This is the prediction router
+    Args:
+        predict_cases:Pydantic schema
+        request:Request (FastAPI request class)
     """
     ressources = request.app.state.ressources
     prediction = Prediction(

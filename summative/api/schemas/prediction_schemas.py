@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 class PredictionRequest(BaseModel):
     """
-    BaseClass for All POST Prediction
+    Base Class for All POST Prediction
     """
     health_expenditure_per_capita_usd:float = Field(description="Average amount in USD paid per capita for health", ge=0, le=1000)
     rural_population_pct:float = Field(description="Percentage of population living in rural areas", ge=0, le=100)
