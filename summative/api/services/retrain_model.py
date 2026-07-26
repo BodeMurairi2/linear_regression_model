@@ -20,7 +20,7 @@ class RetrainModel(Prediction):
         self.__lock = threading.Lock()
         self.__is_training = False
         self.TARGET_COLUMN = "malaria_incidence_per_1000_at_risk"
-        self.TRAINING_DATA_PATH = Path(__file__).parent.parent.parent/"linear_regression"/"malaria_control_africa.csv"
+        self.TRAINING_DATA_PATH = Path(__file__).parent.parent.parent/"linear_regression"/"clean_malaria_control_africa.csv"
         self.MODEL_PATH = Path(__file__).parent.parent.parent / "linear_regression" / "model.pkl"
         self.SCALER_PATH = Path(__file__).parent.parent.parent / "linear_regression" / "scaler.pkl"
         self.__last_result = {
