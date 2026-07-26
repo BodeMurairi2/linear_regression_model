@@ -10,7 +10,7 @@ The model goal is to identify where is the overall best social, economic, and he
 
 ## Data Source
 
-The final dataset malaria_control_africa.csv does not currently exist anywhere. It is assembled from two indenpent and public organizations: The World Health Organization and the World Bank. The two data sources used come from live APIs from the World Health Organization and the World Bank Indicators public APIs portals, merged programmatically, not synthetic; every value traces back to an official statistic published by WHO or the World Bank.
+The final dataset malaria_control_africa.csv does not currently exist anywhere. It is assembled from two independent and public organizations: The World Health Organization and the World Bank. The two data sources used come from live APIs from the World Health Organization and the World Bank Indicators public APIs portals, merged programmatically, not synthetic; every value traces back to an official statistic published by WHO or the World Bank.
 the script.py shows step by step how the two raw data sources where acquired.
 
 ### Sources
