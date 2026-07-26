@@ -5,6 +5,7 @@
 Malaria has been one of the diseases that many african countries have suffered and had a detrimental impact on the healthcare and social life in Africa. In this assignment, my mission is to estimates a country's malaria burden (cases per 1,000 population at risk) from socioeconomic and health-system indicators — GDP, health spending, water access, education — across 52 African countries, 2000–2024.
 This is population-level regression, not individual risk prediction: it flags where a country's malaria burden looks high or low relative to peers with similar conditions, supporting surveillance and policy prioritization.
 The model goal is to identify where is the overall best social, economic, and health conditions to reduce cases of malaria in Africa and can be used to draft policy recommendations in African countries.
+
 ---
 
 ## Data Source
@@ -95,6 +96,7 @@ Returns `422` with a clear validation message if a field is missing or out of ra
 
 ### `POST /retrain/`
 Accepts new labeled rows (the 11 features plus the true `malaria_incidence_per_1000_at_risk`), retrains a fresh Random Forest in the background on the combined dataset, and updates the live model in memory immediately — no server restart needed. `GET /retrain/status` reports progress and the last result.
+
 ---
 
 ## CORS Configuration
@@ -199,7 +201,9 @@ Given both, a manual retrain endpoint is the honest, correctly-scoped implementa
 ## Author
 
 **Bode Murairi**
+
 **Email: b.murairi@alustudent.com**
+
 **Github: BodeMurairi2**
 
 ## Links
