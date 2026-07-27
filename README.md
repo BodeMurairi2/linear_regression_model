@@ -4,7 +4,7 @@
 
 Malaria has been one of the diseases that many African countries have suffered from, with a detrimental impact on healthcare and social life across the continent. This project's mission is to estimate a country's malaria burden (cases per 1,000 population at risk) from socioeconomic and health-system indicators — GDP, health spending, water access, education — across 52 African countries, 2000–2024.
 
-This is population-level regression, not individual risk prediction: it identifies patterns associated with higher or lower malaria incidence and estimates malaria burden for countries based on their socioeconomic and health-system conditions, to support surveillance and policy prioritization.
+This is population-level regression, not individual risk prediction: it identifies patterns associated with higher or lower malaria incidence. It estimates malaria burden for countries based on their socioeconomic and health-system conditions, to support surveillance and policy prioritization.
 
 ---
 
@@ -128,7 +128,7 @@ allow_headers=["Content-Type"]
 Each setting was chosen deliberately:
 - **Methods** are limited to `GET`/`POST` — the API only reads status and makes predictions; there's nothing to `PUT` or `DELETE`.
 - **Credentials** are disabled — this is a stateless prediction API with no cookie- or session-based authentication, so there's nothing to carry across origins.
-- **Origins** are scoped to local development ports rather than a wildcard, since there is no deployed web frontend for this API — the Flutter mobile app is not subject to CORS at all, since CORS only restricts browser-based requests.
+- **Origins** are scoped to local development ports rather than a wildcard, since there is no deployed web frontend for this API — the Flutter mobile app is not subject to CORS, since CORS only restricts browser-based requests.
 
 ---
 
@@ -138,7 +138,7 @@ Each setting was chosen deliberately:
 linear_regression_model/
 ├── README.md                    # this file
 ├── pyproject.toml, uv.lock      # Python dependency management (uv)
-├── requirements.txt             # pinned dependencies for local dev
+├── requirements.txt             # pinned dependencies for local dev and render
 ├── summative/
 │   ├── linear_regression/
 │   │   ├── multivariate.ipynb                       # full notebook: EDA, cleaning, training, model comparison
@@ -194,7 +194,7 @@ The API base URL is already hardcoded to the live Render deployment — no confi
 
 `POST /retrain/` is a manual, on-demand endpoint: submit new labeled data, and the model retrains immediately. The retraining endpoint is intentionally manual: new labeled data must first be obtained and prepared through the data acquisition and cleaning pipeline.
 
-**Deployment note:** Retraining persists the updated model and scaler to disk and reloads them into the running FastAPI process. Persistence across complete service recreation depends on the hosting environment.
+**Deployment note:** Retraining persists the updated model and scaler to disk and reloads them into the running FastAPI process. 
 
 ---
 
@@ -202,10 +202,9 @@ The API base URL is already hardcoded to the live Render deployment — no confi
 
 - **Population-level, not individual-level** — the model estimates national malaria burden from country-year aggregates; it does not predict any individual's personal risk.
 - **Association, not causation** — the relationships the model learns are correlational. They do not establish that changing one factor, such as health spending, would causally change malaria incidence.
-- **Random split, not a test of unseen countries** — the 80/20 split evaluates generalization across country-year observations, not the model's ability to generalize to a country it has never seen at all.
-- **Interpolation introduces uncertainty** — features filled by within-country linear interpolation are estimates, not directly observed values, and carry some uncertainty accordingly.
-- **Deployment persistence depends on infrastructure** — a retrained model persists within the running application, but not necessarily across a full redeploy, which depends on the hosting platform's behavior.
-- **A decision-support tool, not a replacement for epidemiological expertise** — intended to help flag where a country's burden looks unusual relative to peers, not to replace clinical or public-health judgment.
+- **Random split, not a test of unseen countries** — the 80/20 split evaluates generalization across country-year observations, not the model's ability to generalize to a country it has never seen at all nor to predict future yearly malaria numbers. It only predicts what the number of malaria cases can be based on social, economic, and health factors.
+- **Interpolation introduces uncertainty** — features filled by within-country linear interpolation are estimates, not directly observed values, and carry some uncertainty through creating a new linear relationship between data.
+- **A decision-support tool, not a replacement for epidemiological expertise** — intended to help see ideal situations to minimize malaria cases, not to replace clinical or public-health judgment.
 
 ---
 
@@ -219,7 +218,7 @@ https://youtu.be/rpgsq1ZJQqE
 - WHO Global Health Observatory — `MALARIA_EST_INCIDENCE`: https://ghoapi.azureedge.net/api/MALARIA_EST_INCIDENCE
 - World Bank Open Data — World Development Indicators: https://api.worldbank.org/v2/country/{iso3-codes}/indicator/{code}
 
-### Methodological References
+### References
 - Weed, L., Lok, R., Chawra, D., & Zeitzer, J. (2022). *The Impact of Missing Data and Imputation Methods on the Analysis of 24-Hour Activity Patterns.* PMC. https://pmc.ncbi.nlm.nih.gov/articles/PMC9590093/ — linear interpolation's bias grows with the length of the missing-data gap, part of the basis for excluding Djibouti and Somalia rather than interpolating them.
 - Noor, N. M., Abdullah, M. M. A. B., Yahaya, A. S., & Ramli, N. A. (2014). *Comparison of Linear Interpolation Method and Mean Method to Replace the Missing Values in Environmental Data Set.* Materials Science Forum, 803, 278–281. https://www.researchgate.net/publication/271978892 — a direct precedent for comparing linear interpolation against a global mean fill, the same comparison used in this project's cleaning step.
 - Thongsripong, P., Hyman, J. M., Kapan, D. D., & Bennett, S. N. (2021). *Human–Mosquito Contact: A Missing Link in Our Understanding of Mosquito-Borne Disease Transmission Dynamics.* Annals of the Entomological Society of America, 114(4), 397–414. https://academic.oup.com/aesa/article/114/4/397/6273070 — basis for keeping `population_density` over `population_total`: transmission depends on human–mosquito contact rate, which density proxies more directly than a raw population count.
